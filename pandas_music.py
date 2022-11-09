@@ -2,15 +2,17 @@ import pandas as pd
 import re
 import os
 
+
 def extract(csv_name):
 
-    df = pd.read_csv(csv_name + ".csv") # Si lees un csv no hace falta poner "sep = ","" si estan separados por ","
+    df = pd.read_csv(csv_name + ".csv")  # Si lees un csv no hace falta poner "sep = ","" si estan separados por ","
 
     return df
 
-def transform(df,opc):
-    
-    df_transform = df.loc[:,['artist', 'song', 'genre','energy']]
+
+def transform(df, opc):
+
+    df_transform = df.loc[:, ['artist', 'song', 'genre', 'energy']]
 
     list_transform = df_transform.values.tolist()
 
@@ -37,22 +39,22 @@ def transform(df,opc):
 
     for genre1 in list_transform:
 
-        genre1[2] = genre1[2].replace(', ',',')
+        genre1[2] = genre1[2].replace(', ', ',')
 
         genres_songs = re.findall(r'([^,]+)(?:,|$)', genre1[2])
 
-        for genre2 in genres_songs: # Algunas canciones tienes mas de un genero, por lo que los separamos
+        for genre2 in genres_songs:   # Algunas canciones tienes mas de un genero, por lo que los separamos
 
-                repetition = False
+            repetition = False
 
-                for genre3 in list_genre:
+            for genre3 in list_genre:
 
-                    if genre2 == genre3:
+                if genre2 == genre3:
 
-                        repetition = True
+                    repetition = True
 
-                if not repetition:
-                    list_genre.append(genre2)
+            if not repetition:
+                list_genre.append(genre2)
 
     # Lista de energía
 
@@ -65,15 +67,15 @@ def transform(df,opc):
     if opc == 1:
 
         os.system('cls')
-        
+
         print('Lista de artista:\n')
 
         line = ''
         counter = 1
 
         for artist in list_artist:
-            
-            if counter%8 != 0:
+
+            if counter % 8 != 0:
                 line += artist + '      |       '
             else:
                 line += artist + '      |       '
@@ -82,24 +84,32 @@ def transform(df,opc):
                 line = ''
 
             counter += 1
-            
+
         print(line)
         print('\n')
-        
+
         artist_exist = False
 
+        artists_str = ''
+
+        for artist in list_artist:
+            artists_str += artist + '   '
+
         while not artist_exist:
+
             selec_artist = input('Selecione el artista que deseas escuchar: ')
 
-            for artist in list_artist:
-                if artist == selec_artist:
-                    artist_exist = True
+            if not re.search(selec_artist, artists_str):
 
-            if not artist_exist:
                 print('El artista seleccionado no existe en la lista.')
                 input('Vuelva a seleccionar el artista.')
 
+            else:
+
+                artist_exist = True
+
         songs = 'Sus canciones son: '
+
         for artist in list_transform:
 
             if artist[0] == selec_artist:
@@ -112,19 +122,18 @@ def transform(df,opc):
 
         os.system('cls')
 
-
     elif opc == 2:
 
         os.system('cls')
-        
+
         print('Lista de generos musicales:\n')
 
         line = ''
         counter = 1
 
         for genre in list_genre:
-            
-            if counter%6 != 0:
+
+            if counter % 6 != 0:
                 line += genre + '      |       '
             else:
                 line += genre + '      |       '
@@ -133,22 +142,30 @@ def transform(df,opc):
                 line = ''
 
             counter += 1
-            
+
         print(line)
         print('\n')
 
         genre_exist = False
 
+        genre_str = ''
+
+        for genre in list_genre:
+
+            genre_str += genre + ' '
+
         while not genre_exist:
+
             selec_genre = input('Selecione el genero musical que deseas escuchar: ')
 
-            for genre in list_genre:
-                if genre == selec_genre:
-                    genre_exist = True
+            if not re.search(selec_genre, genre_str):
 
-            if not genre_exist:
                 print('El genero seleccionado no existe en la lista.')
                 input('Vuelva a seleccionar el genero musical.')
+
+            else:
+
+                genre_exist = True
 
         os.system('cls')
 
@@ -164,7 +181,7 @@ def transform(df,opc):
 
                 if genre1 == selec_genre:
 
-                    if counter%6 != 0:
+                    if counter % 6 != 0:
 
                         songs += genre[1] + '      |       '
 
@@ -172,7 +189,7 @@ def transform(df,opc):
                         songs += genre[1] + '      |       '
                         songs += '\n'
                         print(songs)
-                        songs =''
+                        songs = ''
 
                     counter += 1
         print(songs)
@@ -180,12 +197,11 @@ def transform(df,opc):
         input()
 
         os.system('cls')
-        
 
     else:
 
         os.system('cls')
-        
+
         print('Rango de nivel de energía de las canciones:\n')
 
         print('Nivel máximo de energía: ', max(list_energy))
@@ -194,14 +210,16 @@ def transform(df,opc):
         error = True
 
         while error:
-            
+
             range = input('Selcciona el rango de energía (<<Numbero mínimo>>,<<Número máximo>>): ')
             range = re.findall(r'([^,]+)(?:,|$)', range)
-            
+
             try:
-                error = False   
+                error = False
                 range[0], range[1] = float(range[0]), float(range[1])
+
             except:
+
                 error = True
                 print('Valor introduccido incorrecto.')
 
@@ -209,7 +227,6 @@ def transform(df,opc):
                 error = True
                 print('Límite inferior mayor que es superior.')
                 input('Vuelve a introducirlo.')
-
 
         os.system('cls')
 
@@ -226,7 +243,7 @@ def transform(df,opc):
 
                 song = songs[1]
 
-                if counter%8 != 0:
+                if counter % 8 != 0:
                     line += song + '      |       '
                 else:
                     line += song + '      |       '
@@ -235,10 +252,10 @@ def transform(df,opc):
                     line = ''
 
                 counter += 1
-            
+
         input(line)
         print('\n')
-        
+
 
 def menu():
 
@@ -277,7 +294,7 @@ if __name__ == "__main__":
             if opc == '1' or opc == '2' or opc == '3' or opc == '4':
 
                 error = False
-            
+
             else:
 
                 error = True
@@ -285,16 +302,15 @@ if __name__ == "__main__":
             if opc != '4':
 
                 if not error:
-                    
+
                     opc = int(opc)
 
-                    df_transform = transform(df_orig,opc)
+                    df_transform = transform(df_orig, opc)
 
                 else:
 
                     print('El valor introducido no es correcto.\n')
                     input('Vuelva a introducirlo.\n')
                     os.system('cls')
-            else: 
+            else:
                 error = True
-
